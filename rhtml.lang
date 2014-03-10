@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+ This file is part of gedit-rails-extensions.
+ 
+ Author: Robert Nasiadek <robert.nasiadek@elpassion.pl>
+ Copyright (c) 2008 Robert Nasiadek <robert.nasiadek@elpassion.pl>
+
+ gedit-rails-extensions is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 3 of the License, or (at your option) any later version.
+
+ gedit-rails-extensions is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public
+ License along with gedit-rails-extensions.
+ If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<language id="rhtml" _name="RHTML/ERB" version="2.0" _section="Markup">
+    <metadata>
+      <property name="mimetypes">text/rhtml</property>
+      <property name="globs">*.rhtml;*.html.erb;*.erb;</property>
+    </metadata>
+    <definitions>
+        <context id="erb-block">
+            <start>&lt;%</start>
+            <end>%&gt;</end>
+            <include>
+              <context ref="ruby:ruby:*"/>
+            </include>
+        </context>
+        <context id="rhtml">
+            <include>
+		<context ref="html:html"/>
+                <context ref="erb-block"/>
+            </include>
+        </context>
+    </definitions>
+</language>
