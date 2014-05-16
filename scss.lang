@@ -1,27 +1,26 @@
 
-<!-- saved from url=(0077)https://raw.githubusercontent.com/ivyl/gedit-mate/master/lang-specs/sass.lang -->
+<!-- saved from url=(0077)https://raw.githubusercontent.com/ivyl/gedit-mate/master/lang-specs/scss.lang -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!--
- Author: Ivan Kerin &lt;kerin@rizn.info&gt;
- 
+ Author: Jan Krolikowski &lt;yanekk@github&gt;
+ SCSS version based on SASS by Ivan Kerin
+ String support from yml.lang by Alexandre da Silva
  Comments support from c.lang by Marco Barisione and Emanuele Aina
  Strings, at-rules &amp; other definitions from css.lang by Scott Martin
  Some reg. exp. patterns based on http://github.com/charlesr/ruby-sass-tmbundle
 --&gt;
-&lt;!--
-TODO:
-* extend at-rules with SASS specific keywords
-* Polish mixins highlighting to include brackets (messes with function)
---&gt;
-&lt;language id="sass" _name="Sass" version="2.0" _section="Others"&gt;
+&lt;language id="scss" _name="SCSS" version="2.0" _section="Others"&gt;
+
   &lt;metadata&gt;
-    &lt;property name="mimetypes"&gt;text/x-sass&lt;/property&gt;
-    &lt;property name="globs"&gt;*.sass&lt;/property&gt;
+    &lt;property name="mimetypes"&gt;text/x-scss&lt;/property&gt;
+    &lt;property name="globs"&gt;*.scss&lt;/property&gt;
     &lt;property name="line-comment-start"&gt;//&lt;/property&gt;
     &lt;property name="block-comment-start"&gt;/*&lt;/property&gt;
     &lt;property name="block-comment-end"&gt;*/&lt;/property&gt;
   &lt;/metadata&gt;
+
   &lt;styles&gt;
+    &lt;style id="string"      _name="String"               map-to="def:string"/&gt;
     &lt;style id="comment"     _name="Comment"              map-to="def:comment"/&gt;
     &lt;style id="tag"         _name="Tag"                  map-to="def:constant"/&gt;
     &lt;style id="class-tag"   _name="Class Tag"            map-to="def:identifier"/&gt;
@@ -30,19 +29,34 @@ TODO:
     &lt;style id="error"       _name="Error"                map-to="def:error"/&gt;
     &lt;style id="keyword"     _name="Keyword"              map-to="def:keyword"/&gt;
     &lt;style id="at-rules"    _name="At-Rules"             map-to="def:keyword"/&gt;
-    &lt;style id="function"    _name="Function"             map-to="def:function"/&gt;    
+    &lt;style id="function"    _name="Function"             map-to="def:function"/&gt;
     &lt;style id="known-value" _name="Known Property Value" map-to="def:type"/&gt;
     &lt;style id="decimal"     _name="Decimal"              map-to="def:decimal"/&gt;
     &lt;style id="dimension"   _name="Dimension"            map-to="def:floating-point"/&gt;
     &lt;style id="color"       _name="Color"                map-to="def:base-n-integer"/&gt;
+    &lt;style id='parent-reference' _name="Parent Reference" map-to='def:constant' /&gt;
+    &lt;style id='interpolation' _name="Interpolation" map-to="def:constant" /&gt;
   &lt;/styles&gt;
-  
+
   &lt;definitions&gt;
-&lt;!--    &lt;context id="comment" style-ref="comment"&gt;
-      &lt;match&gt;^(  )*\/\/.*$&lt;/match&gt;
-    &lt;/context&gt; --&gt;
-    
-    &lt;context id="comment" style-ref="comment" end-at-line-end="true" class="comment" class-disabled="no-spell-check"&gt;
+    &lt;context id="scss"&gt;
+    &lt;include&gt;
+
+    &lt;context id="string" style-ref="string"&gt;
+      &lt;start&gt;"&lt;/start&gt;
+      &lt;end&gt;"&lt;/end&gt;
+      &lt;include&gt;
+        &lt;context ref="def:escape"/&gt;
+        &lt;context ref="def:line-continue"/&gt;
+      &lt;/include&gt;
+    &lt;/context&gt;
+
+    &lt;context id="string-2" style-ref="string"&gt;
+      &lt;start&gt;'&lt;/start&gt;
+      &lt;end&gt;'&lt;/end&gt;
+    &lt;/context&gt;
+
+    &lt;context id="comment" style-ref="comment" end-at-line-end="true"&gt;
         &lt;start&gt;//&lt;/start&gt;
 
         &lt;include&gt;
@@ -50,7 +64,7 @@ TODO:
         &lt;/include&gt;
     &lt;/context&gt;
 
-    &lt;context id="comment-multiline" style-ref="comment" class="comment" class-disabled="no-spell-check"&gt;
+    &lt;context id="comment-multiline" style-ref="comment"&gt;
         &lt;start&gt;/\*&lt;/start&gt;
         &lt;end&gt;\*/&lt;/end&gt;
         &lt;include&gt;
@@ -62,13 +76,10 @@ TODO:
         &lt;match&gt;\*/(?!\*)&lt;/match&gt;
     &lt;/context&gt;
 
-    &lt;context id="identation-error"&gt;
-      &lt;match&gt;^( (  )*)[^\s].*$&lt;/match&gt;
-      &lt;include&gt;
-        &lt;context sub-pattern="1" style-ref="error"/&gt;
-      &lt;/include&gt;
+    &lt;context id='parent-reference' style-ref='parent-reference'&gt;
+      &lt;match&gt;&lt;![CDATA[&amp;]]&gt;&lt;/match&gt;
     &lt;/context&gt;
-  
+
     &lt;context id="class-tag" style-ref="class-tag"&gt;
       &lt;match&gt;(\.)[a-zA-Z][a-zA-Z0-9_-]*&lt;/match&gt;
     &lt;/context&gt;
@@ -76,14 +87,32 @@ TODO:
     &lt;context id="id-tag" style-ref="id-tag"&gt;
       &lt;match&gt;(#)[a-zA-Z][a-zA-Z0-9_-]*&lt;/match&gt;
     &lt;/context&gt;
- 
-    &lt;context id="at-rules" style-ref="at-rules"&gt;
-      &lt;prefix&gt;^[ \t]*@&lt;/prefix&gt;
+
+    &lt;context id='mixin-no-args'&gt;
+      &lt;match&gt;(@mixin) ([a-z]+)&lt;/match&gt;
+      &lt;include&gt;
+        &lt;context sub-pattern='1' style-ref='keyword' /&gt;
+        &lt;context sub-pattern='2' style-ref='function' /&gt;
+      &lt;/include&gt;
+    &lt;/context&gt;
+
+    &lt;context id='at-keywords' style-ref='at-rules'&gt;
+     &lt;prefix&gt;^[ \t]*@&lt;/prefix&gt;
       &lt;keyword&gt;charset&lt;/keyword&gt;
       &lt;keyword&gt;font-face&lt;/keyword&gt;
       &lt;keyword&gt;media&lt;/keyword&gt;
       &lt;keyword&gt;page&lt;/keyword&gt;
       &lt;keyword&gt;import&lt;/keyword&gt;
+      &lt;keyword&gt;extend&lt;/keyword&gt;
+      &lt;keyword&gt;debug&lt;/keyword&gt;
+      &lt;keyword&gt;warn&lt;/keyword&gt;
+      &lt;keyword&gt;mixin&lt;/keyword&gt;
+      &lt;keyword&gt;if&lt;/keyword&gt;
+      &lt;keyword&gt;else&lt;/keyword&gt;
+      &lt;keyword&gt;else if&lt;/keyword&gt;
+      &lt;keyword&gt;for&lt;/keyword&gt;
+      &lt;keyword&gt;while&lt;/keyword&gt;
+      &lt;keyword&gt;include&lt;/keyword&gt;
     &lt;/context&gt;
 
     &lt;context id="selector-pseudo-elements" style-ref="function"&gt;
@@ -102,9 +131,22 @@ TODO:
       &lt;keyword&gt;focus&lt;/keyword&gt;
       &lt;keyword&gt;lang&lt;/keyword&gt;
     &lt;/context&gt;
-  
+
     &lt;context id="property-names" style-ref="keyword"&gt;
-      &lt;match&gt;:[^\s]+|[^\s]+(:|=)&lt;/match&gt;
+      &lt;match&gt;(?!(\$|#))(:[^\s\.]+|[^\s^\.]+(:)(?!first-child|link|visited|hover|active|focus|lang|first-line|first-letter|before|after))&lt;/match&gt;
+    &lt;/context&gt;
+
+    &lt;context id='else-if' style-ref='keyword'&gt;
+      &lt;match&gt;(@else if)&lt;/match&gt;
+    &lt;/context&gt;
+
+    &lt;context id='for-loop' style-ref='keyword'&gt;
+      &lt;start&gt;from&lt;/start&gt;
+      &lt;end&gt;through&lt;/end&gt;
+      &lt;include&gt;
+        &lt;context ref='variable' /&gt;
+        &lt;context ref='def:decimal' /&gt;
+      &lt;/include&gt;
     &lt;/context&gt;
 
     &lt;context id="known-value" style-ref="known-value"&gt;
@@ -346,7 +388,7 @@ TODO:
       &lt;keyword&gt;li&lt;/keyword&gt;
 
       &lt;keyword&gt;html&lt;/keyword&gt;
-      
+
       &lt;keyword&gt;object&lt;/keyword&gt;
       &lt;keyword&gt;iframe&lt;/keyword&gt;
       &lt;keyword&gt;p&lt;/keyword&gt;
@@ -395,7 +437,7 @@ TODO:
     &lt;context id="variable" style-ref="variable"&gt;
       &lt;match&gt;(\!|\$)[a-zA-Z][a-zA-Z0-9-_]*&lt;/match&gt;
     &lt;/context&gt;
-    
+
     &lt;context id="dimension" style-ref="dimension"&gt;
       &lt;match&gt;[\+-]?([0-9]+|[0-9]*\.[0-9]+)(%|e(m|x)|p(x|t|c)|in|ft|(m|c)m|k?Hz|deg|g?rad|m?s)&lt;/match&gt;
     &lt;/context&gt;
@@ -403,20 +445,13 @@ TODO:
     &lt;context id="hexadecimal-color" style-ref="color"&gt;
       &lt;match&gt;#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})&lt;/match&gt;
     &lt;/context&gt;
-    
-    &lt;!-- XXX Also matches generic CSS "functions" (e.g. url()) - name "function" may be appropriate--&gt;
-    &lt;context id="mixin" style-ref="function"&gt;
-      &lt;start&gt;\+?[a-zA-Z][a-zA-Z0-9-_]*\(&lt;/start&gt;
-      &lt;end&gt;\)&lt;/end&gt;
+
+
+    &lt;context id="function"&gt;
+      &lt;match&gt;([a-zA-Z][a-zA-Z0-9-_]*)\(&lt;/match&gt;
       &lt;include&gt;
-        &lt;context ref="def:escape"/&gt;
-        &lt;context ref="def:line-continue"/&gt;
+        &lt;context sub-pattern='1' style-ref='function' /&gt;
       &lt;/include&gt;
-    &lt;/context&gt;
-    
-    &lt;!-- XXX Ugly. Couldn't this be merged to "mixin"? --&gt;
-    &lt;context id="mixin-no-attribute" style-ref="function"&gt;
-      &lt;match&gt;\+[a-zA-Z0-9_-]+&lt;/match&gt;
     &lt;/context&gt;
 
     &lt;context id="number" style-ref="decimal"&gt;
@@ -424,35 +459,19 @@ TODO:
     &lt;/context&gt;
 
     &lt;context id="importance-modifier" style-ref="keyword"&gt;
-      &lt;match&gt;\![ \t]*important&lt;/match&gt;
+      &lt;match&gt;\![ \t]*(important|default)&lt;/match&gt;
     &lt;/context&gt;
-    
-    &lt;context id="sass" class="no-spell-check"&gt;
+
+    &lt;context id='interpolation' style-ref='interpolation'&gt;
+      &lt;start&gt;#{&lt;/start&gt;
+      &lt;end&gt;}&lt;/end&gt;
       &lt;include&gt;
-        &lt;context ref="comment"/&gt;
-        &lt;context ref="comment-multiline"/&gt;
-        &lt;context ref="close-comment-outside-comment"/&gt;
-        &lt;context ref="identation-error"/&gt; 
-        &lt;context ref="def:string"/&gt;
-        &lt;context ref="def:single-quoted-string"/&gt;
-        &lt;context ref="class-tag"/&gt;
-        &lt;context ref="id-tag"/&gt;
-        &lt;context ref="at-rules"/&gt;
-        &lt;context ref="selector-pseudo-elements"/&gt;
-        &lt;context ref="selector-pseudo-classes"/&gt;
-        &lt;context ref="property-names"/&gt;
-        &lt;context ref="tags"/&gt;
-        &lt;context ref="known-value"/&gt;
-        &lt;context ref="variable"/&gt;
-        &lt;context ref="dimension"/&gt;
-        &lt;context ref="hexadecimal-color"/&gt;
-        &lt;context ref="mixin"/&gt;
-        &lt;context ref="mixin-no-attribute"/&gt;
-        &lt;context ref="number"/&gt;
-        &lt;context ref="importance-modifier"/&gt;
+        &lt;context ref='variable' /&gt;
       &lt;/include&gt;
-    &lt;/context&gt;        
-  &lt;/definitions&gt;    
+    &lt;/context&gt;
+  &lt;/include&gt;
+  &lt;/context&gt;
+  &lt;/definitions&gt;
 &lt;/language&gt;
 
 </pre></body><script type="text/javascript">var new_nav = new function() {};var x;var old_navigator = window.navigator;for (x in navigator) {if (typeof navigator[x] == 'function') {eval("new_nav." + x + " = function() { return old_navigator." + x + "();};");} else {eval("new_nav." + x + " = navigator." + x + ";");}}new_nav.userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10";new_nav.vendor = "Apple, Inc.";new_nav.platform = "MacIntel";window.navigator = new_nav;</script></html>

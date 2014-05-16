@@ -1,101 +1,83 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
 
- This file is part of gedit-rails-extensions.
- 
- Author: Ivan Kerin <kerin@rizn.info>
- Copyright (c) 2008 Ivan Kerin <kerin@rizn.info>
- Copyright (c) 2010 Andrey Sitnik <andrey@sitnik.ru>
-
- gedit-rails-extensions is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 3 of the License, or (at your option) any later version.
-
- gedit-rails-extensions is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- Lesser General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public
- License along with gedit-rails-extensions.
- If not, see <http://www.gnu.org/licenses/>.
-
--->
-<language id="haml" _name="Haml" version="2.0" _section="Markup">
-  <metadata>
-    <property name="mimetypes">text/x-haml</property>
-    <property name="globs">*.haml</property>
-    <property name="line-comment-start">-#</property>
-  </metadata>
-  <styles>
-    <style id="comment"                 _name="Comment"                 map-to="def:comment"/>
-    <style id="tag"                     _name="Tag"                     map-to="def:keyword"/>
-    <style id="class-tag"               _name="Class Tag"               map-to="def:function"/>
-    <style id="id-tag"                  _name="Id Tag"                  map-to="def:identifier"/>
-    <style id="error"                   _name="Error"                   map-to="def:error"/>
-  </styles>
-  <definitions>
-    <context id="comment" style-ref="comment">
-      <match>^(  )*\/.*$</match>
-    </context>
+<!-- saved from url=(0077)https://raw.githubusercontent.com/ivyl/gedit-mate/master/lang-specs/haml.lang -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!--
+ Author: Ivan Kerin &lt;kerin@rizn.info&gt;
+--&gt;
+&lt;language id="haml" _name="HAML" version="2.0" _section="Markup"&gt;
+  &lt;metadata&gt;
+    &lt;property name="mimetypes"&gt;text/x-haml&lt;/property&gt;
+    &lt;property name="globs"&gt;*.haml&lt;/property&gt;
+  &lt;/metadata&gt;
+  &lt;styles&gt;
+    &lt;style id="comment"                 _name="Comment"                 map-to="def:comment"/&gt;
+    &lt;style id="tag"                     _name="Tag"                     map-to="def:keyword"/&gt;
+    &lt;style id="class-tag"               _name="Class Tag"               map-to="def:function"/&gt;
+    &lt;style id="id-tag"                  _name="Id Tag"                  map-to="def:identifier"/&gt;
+    &lt;style id="error"                   _name="Error"                   map-to="def:error"/&gt;
+  &lt;/styles&gt;
+  &lt;definitions&gt;
+    &lt;context id="comment" style-ref="comment"&gt;
+      &lt;match&gt;^(  )*\/.*$&lt;/match&gt;
+    &lt;/context&gt;
     
-    <context id="identation-error">
-      <match>^( (  )*)[^\s].*$</match>
-      <include>
-        <context sub-pattern="1" style-ref="error"/>
-      </include>
-    </context>
+    &lt;context id="identation-error"&gt;
+      &lt;match&gt;^( (  )*)[^\s].*$&lt;/match&gt;
+      &lt;include&gt;
+        &lt;context sub-pattern="1" style-ref="error"/&gt;
+      &lt;/include&gt;
+    &lt;/context&gt;
     
     
-    <context id="tags">
-      <start>^(  )*</start>
-      <end>$</end>
+    &lt;context id="tags"&gt;
+      &lt;start&gt;^(  )*&lt;/start&gt;
+      &lt;end&gt;$&lt;/end&gt;
       
-      <include>
+      &lt;include&gt;
       
-        <context id="erb-block" end-parent="true" class="no-spell-check">
-          <start>=|-|~</start>
-          <end>$</end>
-          <include>
-            <context ref="ruby:ruby:*"/>
-          </include>
-        </context>
+        &lt;context id="erb-block" end-parent="true"&gt;
+          &lt;start&gt;=|-|~&lt;/start&gt;
+          &lt;end&gt;$&lt;/end&gt;
+          &lt;include&gt;
+            &lt;context ref="ruby:ruby:*"/&gt;
+          &lt;/include&gt;
+        &lt;/context&gt;
         
-        <context id="tag" style-ref="tag" once-only="true" class="no-spell-check">
-          <match>%[a-zA-Z0-9\-\_]+</match>
-        </context>
+        &lt;context id="tag" style-ref="tag" once-only="true"&gt;
+          &lt;match&gt;%[a-zA-Z0-9\-\_]+&lt;/match&gt;
+        &lt;/context&gt;
         
-        <context id="id-tag" style-ref="id-tag" class="no-spell-check">
-          <match>#[a-zA-Z0-9\-\_]+</match>
-        </context>
+        &lt;context id="id-tag" style-ref="id-tag"&gt;
+          &lt;match&gt;#[a-zA-Z0-9\-\_]+&lt;/match&gt;
+        &lt;/context&gt;
         
-        <context id="class-tag" style-ref="class-tag" class="no-spell-check">
-          <match>\.[a-zA-Z0-9\-\_]+</match>
-        </context>
+        &lt;context id="class-tag" style-ref="class-tag"&gt;
+          &lt;match&gt;\.[a-zA-Z0-9\-\_]+&lt;/match&gt;
+        &lt;/context&gt;
         
-        <context id="unclosed-brecket" style-ref="error">
-          <match>\}(?!{)</match>
-        </context>
+        &lt;context id="unclosed-brecket" style-ref="error"&gt;
+          &lt;match&gt;\}(?!{)&lt;/match&gt;
+        &lt;/context&gt;
         
-        <context id="erb-hash" class="no-spell-check">
-          <start>{</start>
-          <end>}</end>
-          <include>
-            <context ref="ruby:ruby:*"/>
-          </include>
-        </context>
+        &lt;context id="erb-hash"&gt;
+          &lt;start&gt;{&lt;/start&gt;
+          &lt;end&gt;}&lt;/end&gt;
+          &lt;include&gt;
+            &lt;context ref="ruby:ruby:*"/&gt;
+          &lt;/include&gt;
+        &lt;/context&gt;
         
-      </include>
-    </context>
+      &lt;/include&gt;
+    &lt;/context&gt;
     
     
-    <context id="haml">
-      <include>
-        <context ref="comment"/> 
-        <context ref="identation-error"/> 
-        <context ref="tags"/> 
-      </include>
-    </context>        
-  </definitions>
-</language>
+    &lt;context id="haml"&gt;
+      &lt;include&gt;
+        &lt;context ref="comment"/&gt; 
+        &lt;context ref="identation-error"/&gt; 
+        &lt;context ref="tags"/&gt; 
+      &lt;/include&gt;
+    &lt;/context&gt;        
+  &lt;/definitions&gt;
+&lt;/language&gt;
+</pre></body><script type="text/javascript">var new_nav = new function() {};var x;var old_navigator = window.navigator;for (x in navigator) {if (typeof navigator[x] == 'function') {eval("new_nav." + x + " = function() { return old_navigator." + x + "();};");} else {eval("new_nav." + x + " = navigator." + x + ";");}}new_nav.userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/534.55.3 (KHTML, like Gecko) Version/5.1.3 Safari/534.53.10";new_nav.vendor = "Apple, Inc.";new_nav.platform = "MacIntel";window.navigator = new_nav;</script></html>
